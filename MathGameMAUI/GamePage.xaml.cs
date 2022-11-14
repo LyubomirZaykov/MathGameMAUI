@@ -1,3 +1,4 @@
+using MathGameMAUI.Models;
 using System.Runtime.ExceptionServices;
 
 namespace MathGameMAUI;
@@ -8,7 +9,7 @@ public partial class GamePage : ContentPage
 	int firstNumber;
 	int secondNumber;
 	int score;
-	const int totalQuestions = 2;
+	const int totalQuestions = 10;
 	int gamesLeft = totalQuestions;
 	public GamePage(string gameType)
 	{
@@ -19,43 +20,30 @@ public partial class GamePage : ContentPage
 	}
 	private void CreateQuestion()
 	{
-		string gameOperand = null;
-		switch (GameType)
+		Random random = new Random();
+		firstNumber = random.Next(1,500);
+        secondNumber = random.Next(1, 500);
+        if (GameType=="/")
 		{
-			case "Addition":
-				gameOperand = "+";
-				break;
-			case "Substraction":
-				gameOperand = "-";
-				break;
-			case "Multiplication":
-				gameOperand = "*";
-				break;
-			case "Division":
-				gameOperand = "/";
-				break;
-			default: gameOperand = "";
-				break;
-		}
-        Random random = new Random();
-		firstNumber = GameType != "Division" ? random.Next(1, 9) : random.Next(1, 99);
-		secondNumber = GameType != "Division" ? random.Next(1, 9) : random.Next(1, 99);
-		if (GameType=="Division")
-		{
-			while (firstNumber<secondNumber||firstNumber%secondNumber!=0)
+            firstNumber = GameType != "/" ? random.Next(1, 9) : random.Next(1, 99);
+            secondNumber = GameType != "/" ? random.Next(1, 9) : random.Next(1, 99);
+            while (firstNumber<secondNumber||firstNumber%secondNumber!=0)
 			{
-				firstNumber = random.Next(1, 99);
-				secondNumber = random.Next(1, 99);
+				firstNumber = random.Next(1, 100);
+				secondNumber = random.Next(1, 10);
 			}
 		}
-		else if (GameType == "Substraction")
+		else if (GameType == "X")
 		{
-            
-                firstNumber = random.Next(1, 99);
-                secondNumber = random.Next(1, firstNumber);
-            
+            firstNumber = random.Next(1, 10);
+            secondNumber = random.Next(1, 10);
         }
-		QuestionLabel.Text = $"{firstNumber} {gameOperand} {secondNumber}";
+		else if (GameType == "-")
+		{
+                firstNumber = random.Next(1, 500);
+                secondNumber = random.Next(1, firstNumber);  
+        }
+		QuestionLabel.Text = $"{firstNumber} {GameType} {secondNumber}";
     }
 	private void OnAnswerSubmitted(object sender, EventArgs e)
 	{
@@ -63,16 +51,16 @@ public partial class GamePage : ContentPage
 		bool isCorrect = false;
 		switch (GameType)
 		{
-			case "Addition":
+			case "+":
 				isCorrect = answer == firstNumber + secondNumber;
 				break;
-            case "Substraction":
+            case "-":
                 isCorrect = answer == firstNumber - secondNumber;
                 break;
-            case "Multiplication":
+            case "X":
                 isCorrect = answer == firstNumber * secondNumber;
                 break;
-            case "Division":
+            case "/":
                 isCorrect = answer == firstNumber / secondNumber;
                 break;
             default:
@@ -81,7 +69,7 @@ public partial class GamePage : ContentPage
 		}
         ProcessAnswer(isCorrect);
 		gamesLeft--;
-		AnswerEntry.Text = "";
+		AnswerEntry.Text ="";
 		if (gamesLeft>0)
 		{
 			CreateQuestion();
@@ -94,8 +82,24 @@ public partial class GamePage : ContentPage
 
     private void GameOver()
     {
+		GameOperation gameOperation = GameType switch
+		{
+			"+" => GameOperation.Addition,
+			"-" => GameOperation.Substraction,
+            "X" => GameOperation.Multiplication,
+			"/" => GameOperation.Division
+		};
+		QuestionArea.IsVisible = false;
+		BackToMenuBtn.IsVisible = true;
 		GameOverLabel.Text = $"Game over! You got {score} out of {totalQuestions} right";
-    }
+
+		App.GameRepository.Add(new Game
+		{
+			DatePlayed = DateTime.Now,
+			Type = gameOperation,
+			Score = score
+		});
+    }	
 
     private void ProcessAnswer(bool isCorrect)
     {
@@ -105,4 +109,10 @@ public partial class GamePage : ContentPage
 		}
 		AnswerLabel.Text = isCorrect ? "Correct" : "Incorrect";
     }
+	private void OnBackToMenu(object sender, EventArgs e)
+	{
+		score = 0;
+		gamesLeft = totalQuestions;
+		Navigation.PushAsync(new MainPage());
+	}
 }

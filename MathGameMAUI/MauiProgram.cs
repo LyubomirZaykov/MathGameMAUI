@@ -1,4 +1,6 @@
-﻿namespace MathGameMAUI;
+﻿using MathGameMAUI.Data;
+
+namespace MathGameMAUI;
 
 public static class MauiProgram
 {
@@ -9,9 +11,11 @@ public static class MauiProgram
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
 			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+				fonts.AddFont("CaveatBrush-Regular.ttf", "CaveatBrushRegular");
 			});
+		string dbPath = Path.Combine(FileSystem.AppDataDirectory, "game.db");
+		builder.Services.AddSingleton(s =>
+		ActivatorUtilities.CreateInstance<GameRepository>(s, dbPath));
 
 		return builder.Build();
 	}

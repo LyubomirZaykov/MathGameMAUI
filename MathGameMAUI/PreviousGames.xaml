@@ -2,13 +2,36 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MathGameMAUI.PreviousGames"
-             Title="Previous Games"
-             BackgroundColor="White">
-    <VerticalStackLayout>
-        <Label 
-            Text="Previous Games"
-            TextColor="White"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             BackgroundImageSource="bg.jpg">
+    <ScrollView>
+        <VerticalStackLayout Padding="50, 100, 50, 50">
+            <Grid ColumnDefinitions="*,*,*,*"
+                  RowDefinitions="50">
+                <Label Grid.Column="0" Text="Date" FontSize="32"/>
+                <Label Grid.Column="1" Text="Type" FontSize="32"/>
+                <Label Grid.Column="2" Text="Score" FontSize="32"/>
+            </Grid>
+            <CollectionView x:Name="gamesList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="50">
+                            
+                            <Label Grid.Column="0" Text="{Binding DatePlayed,StringFormat='{0:d}'}" TextColor="White" FontSize="32"/>
+                            <Label Grid.Column="1" Text="{Binding Type}" FontSize="32"/>
+                            <Label Grid.Column="2" Text="{Binding Score}" FontSize="32"/>
+                            <ImageButton 
+                                Source="trash.png"
+                                Grid.Column="3" 
+                                Clicked="OnDelete"
+                                BackgroundColor="DeepSkyBlue"
+                                BindingContext="{Binding Id}"
+                                MaximumHeightRequest="40"
+                                MaximumWidthRequest="70"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>   
+            </CollectionView>
+        </VerticalStackLayout>  
+    </ScrollView>
+    
 </ContentPage>
