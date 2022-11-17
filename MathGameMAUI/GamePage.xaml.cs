@@ -9,7 +9,7 @@ public partial class GamePage : ContentPage
 	int firstNumber;
 	int secondNumber;
 	int score;
-	const int totalQuestions = 10;
+	private const int totalQuestions = 2;
 	int gamesLeft = totalQuestions;
 	public GamePage(string gameType)
 	{
@@ -20,7 +20,7 @@ public partial class GamePage : ContentPage
 	}
 	private void CreateQuestion()
 	{
-		Random random = new Random();
+		Random random = new();
 		firstNumber = random.Next(1,500);
         secondNumber = random.Next(1, 500);
         if (GameType=="/")
