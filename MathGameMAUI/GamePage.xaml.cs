@@ -10,7 +10,7 @@ public partial class GamePage : ContentPage
 	int firstNumber;
 	int secondNumber;
 	int score;
-	private const int totalQuestions = 2;
+	private const int totalQuestions = 5;
 	int gamesLeft = totalQuestions;
 	public GamePage(string gameType)
 	{
