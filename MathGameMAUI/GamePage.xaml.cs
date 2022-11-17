@@ -6,6 +6,7 @@ namespace MathGameMAUI;
 public partial class GamePage : ContentPage
 {
 	public string GameType { get; set; }
+	
 	int firstNumber;
 	int secondNumber;
 	int score;
@@ -23,11 +24,19 @@ public partial class GamePage : ContentPage
 		Random random = new();
 		firstNumber = random.Next(1,500);
         secondNumber = random.Next(1, 500);
-        if (GameType=="/")
+		if (GameType=="+")
+		{
+			while (firstNumber+secondNumber>1000)
+			{
+                firstNumber = random.Next(1, 500);
+                secondNumber = random.Next(1, 500);
+            }
+		}
+        else if (GameType=="/")
 		{
             firstNumber = GameType != "/" ? random.Next(1, 9) : random.Next(1, 99);
-            secondNumber = GameType != "/" ? random.Next(1, 9) : random.Next(1, 99);
-            while (firstNumber<secondNumber||firstNumber%secondNumber!=0)
+            secondNumber = GameType != "/" ? random.Next(1, 9) : random.Next(1, 10);
+            while (firstNumber<secondNumber||firstNumber%secondNumber!=0||firstNumber/secondNumber>10)
 			{
 				firstNumber = random.Next(1, 100);
 				secondNumber = random.Next(1, 10);
@@ -47,6 +56,7 @@ public partial class GamePage : ContentPage
     }
 	private void OnAnswerSubmitted(object sender, EventArgs e)
 	{
+		
 		int answer = int.Parse(AnswerEntry.Text);
 		bool isCorrect = false;
 		switch (GameType)
