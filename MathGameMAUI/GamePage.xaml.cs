@@ -47,6 +47,7 @@ public partial class GamePage : ContentPage
     }
 	private void OnAnswerSubmitted(object sender, EventArgs e)
 	{
+		
 		int answer = int.Parse(AnswerEntry.Text);
 		bool isCorrect = false;
 		switch (GameType)

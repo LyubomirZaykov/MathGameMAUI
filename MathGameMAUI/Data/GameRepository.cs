@@ -9,7 +9,9 @@ namespace MathGameMAUI.Data
         private SQLiteConnection conn;
         public GameRepository(string dbPath)
         {
+            
             _dbPath = dbPath;
+            Init();
         }
         public void Init()
         {
@@ -18,7 +20,7 @@ namespace MathGameMAUI.Data
         }
         public List<Game> GetAllGames()
         {
-            Init();
+            //Init();
             return conn.Table<Game>().ToList();
         }
         public void Add(Game game)
